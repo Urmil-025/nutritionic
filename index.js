@@ -269,6 +269,9 @@ function httpPostAsyncGetFoodDetails(search_query)
         
         var https = require('https');
 
+        // Remove double quotes from the string obtained via different platforms (Ex:Alexa) else it returns message - Something went wrong   
+        search_query = search_query.replace(/['"]+/g, '');
+
         var post_data = '{"query": "'+search_query+'"}';
 
         var options = {
