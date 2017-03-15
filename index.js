@@ -303,10 +303,9 @@ function httpPostAsyncGetFoodDetails(search_query)
         });
 
         req.write(post_data);
+        req.end();
 
         console.log(JSON.stringify(req));
-
-        req.end();
 
     });
 }
