@@ -31,6 +31,9 @@ restService.post('/hook', function (req, res) {
 
                 httpsFacebookGetUserDetails(requestBody.originalRequest.data.sender.id).then(function(data) {
 
+                    // TODO - Add code to push user info from FB and calories searched for by each user to maintain history. 
+                    // Should be possible to retrieve data based on days/weeks/everything so far.
+
                     var userName = data.first_name;
 
                     // Intro  messages array
@@ -127,8 +130,6 @@ restService.post('/hook', function (req, res) {
                         }
                     };
 
-                    console.log(speech);
-
                     return res.json({
                         speech: speech,
                         displayText: speech,
@@ -168,7 +169,10 @@ restService.post('/alexa-hook', function (req, res) {
 
             var alexa_intent = JSON.stringify(requestBody.request.intent.name);
 
-            console.log("Request Intent : "+ alexa_intent);            
+            console.log("Request Intent : "+ alexa_intent);
+
+            // TODO - Add code to push user info from FB and calories searched for by each user to maintain history. 
+            // Should be possible to retrieve data based on days/weeks/everything so far.         
 
             if(alexa_intent == '\"Search\"'){
 
@@ -218,9 +222,6 @@ restService.post('/alexa-hook', function (req, res) {
                         speech = food_bio;
                     }
                     
-
-                    console.log(speech);
-
                     return res.json({
                         version: "1.0",
                         response: {
@@ -307,9 +308,6 @@ function httpPostAsyncGetFoodDetails(search_query)
 
         req.write(post_data);
         req.end();
-
-        console.log(req);
-
     });
 }
 
