@@ -167,7 +167,7 @@ restService.post('/alexa-hook', function (req, res) {
 
             var requestBody = req.body;
 
-            console.log("Alexa requestBody: "+requestBody);
+            console.log("Alexa requestBody: "+ JSON.stringify(requestBody));
 
             var alexa_request_type = JSON.stringify(requestBody.request.type);
 
