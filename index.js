@@ -143,6 +143,7 @@ restService.post('/hook', function (req, res) {
         }
         
     } catch (err) {
+        console.log("err.message : "+ err.message);
         return res.status(400).json({
             status: {
                 code: 400,
@@ -217,8 +218,6 @@ restService.post('/alexa-hook', function (req, res) {
                     
                         // Get the required information from the big json. 
                         var food_data = data;
-
-                        console.log("Request Food Data : "+ JSON.stringify(food_data));
 
                         var elements_array = [];
                         var food_bio="";
