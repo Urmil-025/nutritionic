@@ -167,20 +167,10 @@ restService.post('/alexa-hook', function (req, res) {
 
             var requestBody = req.body;
 
-            console.log("Alexa requestBody: "+ JSON.stringify(requestBody));
-
             var alexa_request_type = JSON.stringify(requestBody.request.type);
 
-            var alexa_intent = JSON.stringify(requestBody.request.intent.name);
+            if(alexa_request_type == '\"LaunchRequest\"'){
 
-            console.log("Request Intent : "+ alexa_intent);
-
-            console.log("Request Type : "+ alexa_request_type);
-
-            // TODO - Add code to push user info from FB and calories searched for by each user to maintain history. 
-            // Should be possible to retrieve data based on days/weeks/everything so far. 
-
-            if(alexa_intent == '\"Introduction\"' || alexa_request_type == '\"LaunchRequest\"'){
                 speech = "Hello there! I am Nutri bot. Lose weight with me, the fastest and easiest-to-use CALORIE COUNTER. With the largest food database by far (over 5,000,000 foods) and amazingly fast and easy food and exercise entry, I'll help you take those extra pounds off! And it's FREE! There is no better diet app. Start by simply saying Give me calories for an apple"
 
                 return res.json({
@@ -194,57 +184,22 @@ restService.post('/alexa-hook', function (req, res) {
                     }
                 });
 
-            }else if(alexa_intent == '\"Search\"'){
+            }else if(alexa_request_type == '\"IntentRequest\"'){
 
-                var alexa_food_requested = JSON.stringify(requestBody.request.intent.slots.food_info.value);            
+                var alexa_intent = JSON.stringify(requestBody.request.intent.name);
 
-                console.log("Request Food Info : "+ alexa_food_requested);
+                console.log("Request Intent : "+ alexa_intent);
 
-                httpPostAsyncGetFoodDetails(alexa_food_requested).then(function(data) {
-                
-                    // Get the required information from the big json. 
-                    var food_data = data;
+                // TODO - Add code to push user info from FB and calories searched for by each user to maintain history. 
+                // Should be possible to retrieve data based on days/weeks/everything so far. 
 
-                    console.log("Request Food Data : "+ JSON.stringify(food_data));
+                if(alexa_intent == '\"Introduction\"'){
+                    speech = "Hello there! I am Nutri bot. Lose weight with me, the fastest and easiest-to-use CALORIE COUNTER. With the largest food database by far (over 5,000,000 foods) and amazingly fast and easy food and exercise entry, I'll help you take those extra pounds off! And it's FREE! There is no better diet app. Start by simply saying Give me calories for an apple"
 
-                    var elements_array = [];
-                    var food_bio="";
-
-                    if(food_data.message === "Something went wrong"){
-
-                        // Error messages array
-                        var error_message_array = [
-                            'Damn! The rabbits have been nibbling the server cables again! Gotta rush...I\'ll be right back!',
-                            'I am now serving the angels...\'ll be back to serve the humans shortly',
-                            'Sshh...My developers now sleeping and dreaming about new features to implement. I\'ll be back shortly',
-                            'You may be addicted to me but I care about your health and want to give you a break for sometime. Will be back soon.',
-                            'You are in the right place and I am not. I am trying to get there soon. Bear with me please'
-                        ]
-
-                        // using Math func to generate random number and pick up random message from the array.
-                        speech = error_message_array[Math.floor(Math.random()*error_message_array.length)];
-
-                    }
-                    else if(typeof food_data == "undefined" || typeof food_data.foods == "undefined"){
-
-                        speech = "I am not sure if I heard that correctly. Please try again with a clear food name."
-
-                    }else{
-
-                        for(var i = 0; i < food_data.foods.length; i++) 
-                        {
-                            var food_item = food_data.foods[i];
-                            // Preparing string with all the required data
-                            food_bio = food_bio+" "+food_item.serving_qty+" "+food_item.serving_unit+" of "+food_item.food_name+" contains "+food_item.nf_calories+" calories ";
-                        }
-
-                        // Return speech data.
-                        speech = food_bio;
-                    }
-                    
                     return res.json({
                         version: "1.0",
                         response: {
+                            shouldEndSession: false,
                             outputSpeech: {
                               type: "PlainText",
                               text: speech
@@ -252,7 +207,67 @@ restService.post('/alexa-hook', function (req, res) {
                         }
                     });
 
-                });
+                }else if(alexa_intent == '\"Search\"'){
+
+                    var alexa_food_requested = JSON.stringify(requestBody.request.intent.slots.food_info.value);            
+
+                    console.log("Request Food Info : "+ alexa_food_requested);
+
+                    httpPostAsyncGetFoodDetails(alexa_food_requested).then(function(data) {
+                    
+                        // Get the required information from the big json. 
+                        var food_data = data;
+
+                        console.log("Request Food Data : "+ JSON.stringify(food_data));
+
+                        var elements_array = [];
+                        var food_bio="";
+
+                        if(food_data.message === "Something went wrong"){
+
+                            // Error messages array
+                            var error_message_array = [
+                                'Damn! The rabbits have been nibbling the server cables again! Gotta rush...I\'ll be right back!',
+                                'I am now serving the angels...\'ll be back to serve the humans shortly',
+                                'Sshh...My developers now sleeping and dreaming about new features to implement. I\'ll be back shortly',
+                                'You may be addicted to me but I care about your health and want to give you a break for sometime. Will be back soon.',
+                                'You are in the right place and I am not. I am trying to get there soon. Bear with me please'
+                            ]
+
+                            // using Math func to generate random number and pick up random message from the array.
+                            speech = error_message_array[Math.floor(Math.random()*error_message_array.length)];
+
+                        }
+                        else if(typeof food_data == "undefined" || typeof food_data.foods == "undefined"){
+
+                            speech = "I am not sure if I heard that correctly. Please try again with a clear food name."
+
+                        }else{
+
+                            for(var i = 0; i < food_data.foods.length; i++) 
+                            {
+                                var food_item = food_data.foods[i];
+                                // Preparing string with all the required data
+                                food_bio = food_bio+" "+food_item.serving_qty+" "+food_item.serving_unit+" of "+food_item.food_name+" contains "+food_item.nf_calories+" calories ";
+                            }
+
+                            // Return speech data.
+                            speech = food_bio;
+                        }
+                        
+                        return res.json({
+                            version: "1.0",
+                            response: {
+                                outputSpeech: {
+                                  type: "PlainText",
+                                  text: speech
+                                },
+                            }
+                        });
+
+                    });
+
+                }
 
             }  
         }
