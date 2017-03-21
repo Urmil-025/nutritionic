@@ -167,6 +167,8 @@ restService.post('/alexa-hook', function (req, res) {
 
             var requestBody = req.body;
 
+            console.log("Alexa requestBody: "+requestBody);
+
             var alexa_request_type = JSON.stringify(requestBody.request.type);
 
             var alexa_intent = JSON.stringify(requestBody.request.intent.name);
@@ -256,6 +258,7 @@ restService.post('/alexa-hook', function (req, res) {
         }
         
     } catch (err) {
+        console.log("err.message : "+ err.message);
         return res.status(400).json({
             status: {
                 code: 400,
