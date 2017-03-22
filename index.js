@@ -193,7 +193,7 @@ restService.post('/alexa-hook', function (req, res) {
                     'Sure. Happy to Help. Remember, Sore today. Strong Tomorrow',
                     'Sure. Happy to Help. Remember, Better Sore than Sorry',
                     'Sure. Remember, Sweat is just fat crying out loud',
-                    'Thank you! Remember, fit is not a destination, its the way of life!'
+                    'Thank you! Remember, fit is not a destination, its the way of life!',
                     'Happy to help. Remember, the hardest lift of all is lifting your butt off the couch',
                     'Thank you! Remember - Sweat. Smile. Repeat'
                 ]
