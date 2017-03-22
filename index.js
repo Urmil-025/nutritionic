@@ -193,6 +193,8 @@ restService.post('/alexa-hook', function (req, res) {
 
             var alexa_request_type = JSON.stringify(requestBody.request.type);
 
+            console.log("Request alexa_request_type : "+ alexa_request_type);
+
             if(alexa_request_type == '\"LaunchRequest\"'){
 
                 speech = "Hello there! I am Nutri bot. Lose weight with me, the fastest and easiest-to-use CALORIE COUNTER. With the largest food database by far (over 5,000,000 foods) and amazingly fast and easy food and exercise entry, I'll help you take those extra pounds off! And it's FREE! There is no better diet app. Start by simply saying Give me calories for an apple"
