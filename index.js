@@ -193,8 +193,6 @@ restService.post('/alexa-hook', function (req, res) {
 
             var alexa_request_type = JSON.stringify(requestBody.request.type);
 
-            console.log("Request alexa_request_type : "+ alexa_request_type);
-
             if(alexa_request_type == '\"LaunchRequest\"'){
 
                 speech = "Hello there! I am Nutri bot. Lose weight with me, the fastest and easiest-to-use CALORIE COUNTER. With the largest food database by far (over 5,000,000 foods) and amazingly fast and easy food and exercise entry, I'll help you take those extra pounds off! And it's FREE! There is no better diet app. Start by simply saying Give me calories for an apple"
@@ -203,33 +201,6 @@ restService.post('/alexa-hook', function (req, res) {
                     version: "1.0",
                     response: {
                         shouldEndSession: false,
-                        outputSpeech: {
-                          type: "PlainText",
-                          text: speech
-                        },
-                    }
-                });
-
-            }else if(alexa_request_type == '\"SessionEndedRequest\"'){
-
-                //Why created messages array
-                var thank_you_message_array = [
-                    'Well, thank you! Remember, making excuses burns zero calories per hour.',
-                    'Sure. Happy to Help. Remember, Sore today. Strong Tomorrow',
-                    'Sure. Happy to Help. Remember, Better Sore than Sorry',
-                    'Sure. Remember, Sweat is just fat crying out loud',
-                    'Thank you! Remember, fit is not a destination, its the way of life!',
-                    'Happy to help. Remember, the hardest lift of all is lifting your butt off the couch',
-                    'Thank you! Remember - Sweat. Smile. Repeat'
-                ]
-
-                // using Math func to generate random number and pick up random message from the array.
-                speech = thank_you_message_array[Math.floor(Math.random()*thank_you_message_array.length)];   
-
-                return res.json({
-                    version: "1.0",
-                    response: {
-                        shouldEndSession: true,
                         outputSpeech: {
                           type: "PlainText",
                           text: speech
@@ -319,6 +290,32 @@ restService.post('/alexa-hook', function (req, res) {
 
                     });
 
+                }else if(alexa_intent == '\"Thanks\"'){
+
+                    //Why created messages array
+                    var thank_you_message_array = [
+                        'Well, thank you! Remember, making excuses burns zero calories per hour.',
+                        'Sure. Happy to Help. Remember, Sore today. Strong Tomorrow',
+                        'Sure. Happy to Help. Remember, Better Sore than Sorry',
+                        'Sure. Remember, Sweat is just fat crying out loud',
+                        'Thank you! Remember, fit is not a destination, its the way of life!',
+                        'Happy to help. Remember, the hardest lift of all is lifting your butt off the couch',
+                        'Thank you! Remember - Sweat. Smile. Repeat'
+                    ]
+
+                    // using Math func to generate random number and pick up random message from the array.
+                    speech = thank_you_message_array[Math.floor(Math.random()*thank_you_message_array.length)];   
+
+                    return res.json({
+                        version: "1.0",
+                        response: {
+                            shouldEndSession: true,
+                            outputSpeech: {
+                              type: "PlainText",
+                              text: speech
+                            },
+                        }
+                    });
                 }
 
             }  
