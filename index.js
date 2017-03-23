@@ -217,8 +217,8 @@ restService.post('/alexa-hook', function (req, res) {
                 // TODO - Add code to push user info from FB and calories searched for by each user to maintain history. 
                 // Should be possible to retrieve data based on days/weeks/everything so far. 
 
-                if(alexa_intent == '\"Introduction\"'){
-                    speech = "Hello there! I am Nutri bot. Lose weight with me, the fastest and easiest-to-use CALORIE COUNTER. With the largest food database by far (over 5,000,000 foods) and amazingly fast and easy food and exercise entry, I'll help you take those extra pounds off! And it's FREE! There is no better diet app. Start by simply saying Give me calories for an apple"
+                if(alexa_intent == '\"Introduction\"' || alexa_intent == '\"AMAZON.HelpIntent\"'){
+                    speech = "Hey there! I am Nutri bot. Lose weight with me, I'll help you take those extra pounds off! Start by simply saying Give me calories for an apple"
 
                     return res.json({
                         version: "1.0",
@@ -290,7 +290,7 @@ restService.post('/alexa-hook', function (req, res) {
 
                     });
 
-                }else if(alexa_intent == '\"Thanks\"'){
+                }else if(alexa_intent == '\"Thanks\"' || alexa_intent == '\"AMAZON.CancelIntent\"' || alexa_intent == '\"AMAZON.StopIntent\"'){
 
                     //Why created messages array
                     var thank_you_message_array = [
