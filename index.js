@@ -2,6 +2,8 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const pg = require('pg');
+
 //const Promise = require('express-promise');
 
 const restService = express();
@@ -9,6 +11,19 @@ restService.use(bodyParser.json());
 
 
 restService.listen((process.env.PORT || 5000), function () {
+
+    pg.defaults.ssl = true;
+    pg.connect(process.env.DATABASE_URL, function(err, client) {
+      if (err) throw err;
+      console.log('Connected to postgres! Getting schemas...');
+
+      client
+        .query('SELECT table_schema,table_name FROM information_schema.tables;')
+        .on('row', function(row) {
+          console.log(JSON.stringify(row));
+        });
+    });
+
     console.log("Server listening");
 });
 
