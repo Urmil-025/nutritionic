@@ -1,5 +1,5 @@
 {
-  "name": "dev-nutritionic webhook",
+  "name": "dev_nutritionic_webhook",
   "version": "1.0.0",
   "description": "Webhook for nutri bot , dev only",
   "main": "index.js",
