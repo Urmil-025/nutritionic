@@ -2,30 +2,41 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const pg = require('pg');
 
-//const Promise = require('express-promise');
+var pgp_options = {
+    // global event notification;
+    error: function (error, e) {
+        if (e.cn) {
+            // A connection-related error;
+            //
+            // Connections are reported back with the password hashed,
+            // for safe errors logging, without exposing passwords.
+            console.log("CN:", e.cn);
+            console.log("EVENT:", error.message || error);
+        }
+    }
+};
 
+const pgp = require('pg-promise')(pgp_options);
 const restService = express();
 restService.use(bodyParser.json());
 
 
 restService.listen((process.env.PORT || 5000), function () {
+    console.log("Server listening");
 
-    pg.defaults.ssl = true;
-    pg.connect(process.env.DATABASE_URL, function(err, client) {
-      if (err) throw err;
-      console.log('Connected to postgres! Getting schemas...');
+    // using an invalid connection string:
+    var db = pgp('postgres://bgpydodikxeqoe:7dc13e2c82aa3413b185a924c746e5580454b35352556d1c379913a21d159519@ec2-54-243-55-1.compute-1.amazonaws.com:5432/dcgpbusvu0he8c');
 
-      client
-        .query('SELECT table_schema,table_name FROM information_schema.tables;')
-        .on('row', function(row) {
-          console.log(JSON.stringify(row));
+    db.connect()
+        .then(function (obj) {
+            console.log("SUCCESS: "+JSON.stringify(obj));
+            obj.done(); // success, release the connection;
+        })
+        .catch(function (error) {
+            console.log("ERROR:", error.message || error);
         });
     });
-
-    console.log("Server listening");
-});
 
 // --------------- WEB HOOK FOR API AI / FACEBOOK : START ----------------------
 
