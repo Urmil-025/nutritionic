@@ -12,6 +12,23 @@ restService.use(bodyParser.json());
 
 restService.listen((process.env.PORT || 5000), function () {
     console.log("Server listening");
+
+    backendless.enablePromises();
+     
+    function userRegistered(user) {
+        console.log("user has registered");
+    }
+      
+    function gotError(err) {
+        console.log("error message - " + err.message);
+        console.log("error code - " + err.statusCode);
+    }
+     
+    var user = new backendless.User();
+    user.email = "backendlessdeveloper@backedless.com";
+    user.password = "password";
+    backendless.UserService.register(user).then(userRegistered).catch(gotError);
+    
 });
 
 // --------------- WEB HOOK FOR API AI / FACEBOOK : START ----------------------
