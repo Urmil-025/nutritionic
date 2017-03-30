@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const backendless = require('backendless');
 
 backendless.initApp('183F30BC-D01C-BECC-FFEB-C74CEC936300','73A8A753-A4D0-FB98-FF1F-94E5F7465900','v1');
+backendless.enablePromises();
 
 const restService = express();
 restService.use(bodyParser.json());
@@ -12,23 +13,6 @@ restService.use(bodyParser.json());
 
 restService.listen((process.env.PORT || 5000), function () {
     console.log("Server listening");
-
-    backendless.enablePromises();
-     
-    function userRegistered(user) {
-        console.log("user has registered");
-    }
-      
-    function gotError(err) {
-        console.log("error message - " + err.message);
-        console.log("error code - " + err.statusCode);
-    }
-     
-    var user = new backendless.User();
-    user.email = "backendlessdeveloper@backedless.com";
-    user.password = "password";
-    backendless.UserService.register(user).then(userRegistered).catch(gotError);
-    
 });
 
 // --------------- WEB HOOK FOR API AI / FACEBOOK : START ----------------------
@@ -54,6 +38,24 @@ restService.post('/hook', function (req, res) {
                     // Should be possible to retrieve data based on days/weeks/everything so far.
 
                     var userName = data.first_name;
+
+                    //TODO: 
+                    // Add code to check if user is already registered on the app , from backend.
+
+                    var user = new backendless.User();
+                    user.name = data.first_name+" "+data.last_name;
+                    user.password = "nutribot";
+                    user['profile_pic'] = data.profile_pic;
+                    user['locale'] = data.locale;
+                    user['timezone'] = data.timezone;
+                    user['gender'] = data.gender;
+                    
+                    // Code added to register user in the backend . 
+                    backendless.UserService.register(user).then(function(user){
+                        console.log(user.name+" - User registration Success!");
+                    }).catch(function(err){
+                        console.log("User registration Error: "+err.statusCode+' - '+err.message); 
+                    });
 
                     // Intro  messages array
                     var introduction_message_array = [
