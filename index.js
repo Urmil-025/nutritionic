@@ -2,7 +2,9 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-//const Promise = require('express-promise');
+const backendless = require('backendless');
+
+backendless.initApp('183F30BC-D01C-BECC-FFEB-C74CEC936300','73A8A753-A4D0-FB98-FF1F-94E5F7465900','v1');
 
 const restService = express();
 restService.use(bodyParser.json());
